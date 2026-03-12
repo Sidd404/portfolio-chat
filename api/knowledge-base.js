@@ -126,7 +126,7 @@ const knowledgeBase = {
 
 const answerCache = [
     {
-        keywords: ["stack", "tech", "skill", "language", "tools", "use", "know", "expertise"],
+        keywords: ["stack", "tech", "skill", "language", "tools", "expertise"],
         answer: `**Tech Stack:**
 • **Languages:** TypeScript, JavaScript, SQL
 • **Backend:** Node.js, NestJS, Express.js, REST APIs, WebSockets

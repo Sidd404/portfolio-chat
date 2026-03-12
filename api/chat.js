@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
 
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-8b" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         // Build conversation history from client
         const conversationHistory = [
