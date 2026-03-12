@@ -839,6 +839,16 @@ img {
     font-size: 1rem;
 }
 
+.skill-icon.jest {
+    background: linear-gradient(135deg, #C21325 0%, #99001c 100%);
+    color: white;
+}
+
+.skill-icon.jest::after {
+    content: 'Jt';
+    font-size: 1rem;
+}
+
 /* ===================================
    Experience Section
    =================================== */
