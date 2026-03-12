@@ -302,18 +302,17 @@
                             TATA AIG, Gurugram, India
                         </p>
                         <ul class="job-description">
-                            <li>Implemented DocIT service for MediCare Select product, serving 1M+ policyholders with
-                                automated document creation.</li>
-                            <li>Built high-throughput GC sync reporting in Footprint platform, handling 70k+
-                                records/sec.</li>
-                            <li>Scaled Policy Issuing workflows to process 10M+ monthly transactions with 99.9%
-                                availability.</li>
+                            <li>Built event-driven Lambda + SQS + SNS document pipeline for motor insurance vertical (8,000 Cr+ annual revenue), serving thousands of customers daily with 99.9% delivery reliability.</li>
+                            <li>Designed reporting pipeline generating 70K+ record reports, reducing sync-failure detection time by 70% across downstream systems.</li>
+                            <li>Integrated NestJS/ReactJS support portal with 3 core systems via real-time event streams, reducing MTTR by 40%.</li>
                         </ul>
                         <div class="job-tags">
-                            <span class="tag">Node.js</span>
+                            <span class="tag">TypeScript</span>
                             <span class="tag">NestJS</span>
-                            <span class="tag">React</span>
-                            <span class="tag">AWS</span>
+                            <span class="tag">React.js</span>
+                            <span class="tag">AWS Lambda</span>
+                            <span class="tag">SQS</span>
+                            <span class="tag">SNS</span>
                         </div>
                     </div>
                 </div>
@@ -334,18 +333,15 @@
                             EY, Gurugram, India
                         </p>
                         <ul class="job-description">
-                            <li>Developed and maintained backend systems for Tata AIG's Motor line of business, covering
-                                private cars, two-wheelers, commercial vehicles, extended warranty, and standalone
-                                compulsory personal accident insurance.</li>
-                            <li>Collaborated closely with business analysts and testers to ensure alignment on project
-                                goals and requirements.</li>
-                            <li>Mentored junior team members, fostering a collaborative work environment and sharing
-                                domain expertise.</li>
+                            <li>Built server-side microservices for end-to-end quote generation and issuance, automating underwriting logic across 5+ product lines and cutting quote turnaround from days to minutes.</li>
+                            <li>Delivered a full-stack CRM replacing a legacy platform with rule-based orchestration and priority queues, improving resolution efficiency by 60%.</li>
+                            <li>Automated endorsement processing for millions of insurance records with built-in validation rules, reducing manual intervention by 50%.</li>
                         </ul>
                         <div class="job-tags">
                             <span class="tag">Node.js</span>
-                            <span class="tag">Express.js</span>
-                            <span class="tag">MongoDB</span>
+                            <span class="tag">NestJS</span>
+                            <span class="tag">PostgreSQL</span>
+                            <span class="tag">DynamoDB</span>
                             <span class="tag">AWS</span>
                         </div>
                     </div>
@@ -354,8 +350,8 @@
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
                         <div class="timeline-header">
-                            <h3 class="job-title">Junior Node.js Developer</h3>
-                            <span class="job-period">May 2021 - Feb 2023</span>
+                            <h3 class="job-title">Jr. Node.js Engineer</h3>
+                            <span class="job-period">Mar 2021 – Feb 2023</span>
                         </div>
                         <p class="job-company">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -364,20 +360,19 @@
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3"></circle>
                             </svg>
-                            Henceforth Solutions Pvt. Ltd., Punjab, India
+                            Henceforth Solutions Pvt. Ltd., Mohali, India
                         </p>
                         <ul class="job-description">
-                            <li>Collaborated with project managers, clients, and creative teams to deliver efficient
-                                solutions.</li>
-                            <li>Designed and developed multiple applications and websites from scratch.</li>
-                            <li>Trained and guided a team of 4 interns, providing mentorship and technical guidance.
-                            </li>
+                            <li>Built backend services for 3 Web3 applications from scratch, handling 50K+ monthly active users at 99% uptime.</li>
+                            <li>Set up Redis pub/sub WebSocket infrastructure for real-time messaging across distributed instances, hitting sub-50ms latency.</li>
+                            <li>Scaled ride-hailing backend to 10K+ concurrent WebSocket connections via message queues, ensuring zero data loss in matching flows.</li>
                         </ul>
                         <div class="job-tags">
                             <span class="tag">Node.js</span>
-                            <span class="tag">Express.js</span>
+                            <span class="tag">WebSockets</span>
+                            <span class="tag">Redis</span>
                             <span class="tag">MongoDB</span>
-                            <span class="tag">MySQL</span>
+                            <span class="tag">Web3</span>
                         </div>
                     </div>
                 </div>
@@ -390,6 +385,31 @@
         <div class="container">
             <h2 class="section-title">Featured Projects</h2>
             <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="8" x2="12" y2="12"></line>
+                                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                            </svg>
+                        </div>
+                        <h3 class="project-title">Distributed Rate Limiter</h3>
+                    </div>
+                    <p class="project-description">
+                        Production-grade distributed rate limiter using Redis + Lua scripting to enforce atomic
+                        throttling across horizontally scaled microservices. Validated 1M+ req/s capacity via
+                        Autocannon load testing across multiple replicas with full fault tolerance.
+                    </p>
+                    <div class="project-tech">
+                        <span>NestJS</span>
+                        <span>Redis</span>
+                        <span>Lua</span>
+                        <span>Autocannon</span>
+                    </div>
+                </div>
                 <div class="project-card">
                     <div class="project-header">
                         <div class="project-icon">
