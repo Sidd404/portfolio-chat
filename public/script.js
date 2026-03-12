@@ -1,432 +1,171 @@
-// ===================================
-// Theme Toggle
-// ===================================
-const themeToggle = document.getElementById('theme-toggle');
-const html = document.documentElement;
+/* ─── script.js ─── */
 
-// Check for saved theme preference or default to dark
-const savedTheme = localStorage.getItem('theme') || 'dark';
-html.setAttribute('data-theme', savedTheme);
+// ═══════════════════════════════════════
+// 1. Mouse-following radial gradient
+// ═══════════════════════════════════════
+const overlay = document.getElementById('gradient-overlay');
 
-themeToggle.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
+document.addEventListener('mousemove', (e) => {
+    overlay.style.setProperty('--mx', e.clientX + 'px');
+    overlay.style.setProperty('--my', e.clientY + 'px');
 });
 
-// ===================================
-// Mobile Menu Toggle
-// ===================================
-const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-const navMenu = document.getElementById('nav-menu');
+// ═══════════════════════════════════════
+// 2. Scroll-reveal (Intersection Observer)
+// ═══════════════════════════════════════
+const revealEls = document.querySelectorAll('.reveal');
 
-mobileMenuBtn.addEventListener('click', () => {
-    mobileMenuBtn.classList.toggle('active');
-    navMenu.classList.toggle('active');
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+        }
+    });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+revealEls.forEach((el, i) => {
+    el.style.transitionDelay = `${(i % 4) * 0.05}s`;
+    revealObserver.observe(el);
 });
 
-// Close mobile menu when clicking a link
-const navLinks = document.querySelectorAll('.nav-link');
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenuBtn.classList.remove('active');
-        navMenu.classList.remove('active');
-    });
-});
+// ═══════════════════════════════════════
+// 3. Active nav highlight on scroll
+// ═══════════════════════════════════════
+const sections   = document.querySelectorAll('main .section');
+const navLinks   = document.querySelectorAll('.nav-link');
 
-// ===================================
-// Active Navigation Link on Scroll
-// ===================================
-const sections = document.querySelectorAll('section[id]');
-
-function highlightNavLink() {
-    const scrollY = window.scrollY;
-
-    sections.forEach(section => {
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 100;
-        const sectionId = section.getAttribute('id');
-
-        const navLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
-
-        if (navLink) {
-            if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
-                navLink.classList.add('active');
-            } else {
-                navLink.classList.remove('active');
-            }
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            navLinks.forEach(link => link.classList.remove('active'));
+            const id = entry.target.getAttribute('id');
+            const active = document.querySelector(`.nav-link[data-section="${id}"]`);
+            if (active) active.classList.add('active');
         }
     });
-}
+}, { threshold: 0.3 });
 
-window.addEventListener('scroll', highlightNavLink);
-highlightNavLink(); // Call on load
+sections.forEach(s => sectionObserver.observe(s));
 
-// ===================================
-// Scroll Reveal Animation
-// ===================================
-function revealOnScroll() {
-    const reveals = document.querySelectorAll('.reveal');
-    const windowHeight = window.innerHeight;
-
-    reveals.forEach(element => {
-        const elementTop = element.getBoundingClientRect().top;
-        const elementVisible = 150;
-
-        if (elementTop < windowHeight - elementVisible) {
-            element.classList.add('active');
-        }
-    });
-}
-
-// Add reveal class to elements
-document.addEventListener('DOMContentLoaded', () => {
-    const elementsToReveal = document.querySelectorAll(
-        '.about-content, .skills-category, .timeline-item, .project-card, .education-card, .contact-method'
-    );
-
-    elementsToReveal.forEach(element => {
-        element.classList.add('reveal');
-    });
-
-    // Initial check
-    revealOnScroll();
-});
-
-window.addEventListener('scroll', revealOnScroll);
-
-// ===================================
-// Navbar Background on Scroll
-// ===================================
-const navbar = document.getElementById('navbar');
-
-function handleNavbarScroll() {
-    if (window.scrollY > 50) {
-        navbar.style.padding = '12px 0';
-        navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.padding = '16px 0';
-        navbar.style.boxShadow = 'none';
-    }
-}
-
-window.addEventListener('scroll', handleNavbarScroll);
-
-// ===================================
-// Smooth Scroll for Safari
-// ===================================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-
-        if (targetElement) {
-            const navHeight = navbar.offsetHeight;
-            const targetPosition = targetElement.offsetTop - navHeight;
-
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
-        }
-    });
-});
-
-// ===================================
-// Typing Effect for Hero Subtitle
-// ===================================
-const typingText = document.querySelector('.typing-text');
-const roles = [
-    'Senior Backend Developer',
-    'Node.js Expert',
-    'API Architect',
-    'AWS Serverless Specialist'
-];
-
-let roleIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
-let typingSpeed = 100;
-
-function typeEffect() {
-    const currentRole = roles[roleIndex];
-
-    if (isDeleting) {
-        typingText.textContent = currentRole.substring(0, charIndex - 1);
-        charIndex--;
-        typingSpeed = 50;
-    } else {
-        typingText.textContent = currentRole.substring(0, charIndex + 1);
-        charIndex++;
-        typingSpeed = 100;
-    }
-
-    if (!isDeleting && charIndex === currentRole.length) {
-        // Pause at end of word
-        typingSpeed = 2000;
-        isDeleting = true;
-    } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        roleIndex = (roleIndex + 1) % roles.length;
-        typingSpeed = 500;
-    }
-
-    setTimeout(typeEffect, typingSpeed);
-}
-
-// Start typing effect after page load
-setTimeout(typeEffect, 1500);
-
-// ===================================
-// Stats Counter Animation
-// ===================================
-function animateCounter(element, target) {
-    let current = 0;
-    const increment = target / 50;
-    const duration = 2000;
-    const stepTime = duration / 50;
-
-    const counter = setInterval(() => {
-        current += increment;
-        if (current >= target) {
-            element.textContent = target + '+';
-            clearInterval(counter);
-        } else {
-            element.textContent = Math.floor(current) + '+';
-        }
-    }, stepTime);
-}
-
-// Intersection Observer for stats
-const statsSection = document.querySelector('.about-stats');
-let statsAnimated = false;
-
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting && !statsAnimated) {
-            const statNumbers = document.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                if (!isNaN(target)) {
-                    animateCounter(stat, target);
-                }
-            });
-            statsAnimated = true;
-        }
-    });
-}, { threshold: 0.5 });
-
-if (statsSection) {
-    statsObserver.observe(statsSection);
-}
-
-// ===================================
-// Parallax Effect for Hero
-// ===================================
-const hero = document.querySelector('.hero');
-const codeBlock = document.querySelector('.code-block');
-
-window.addEventListener('scroll', () => {
-    if (window.innerWidth > 768) {
-        const scrolled = window.scrollY;
-        if (codeBlock && scrolled < window.innerHeight) {
-            codeBlock.style.transform = `translateY(${scrolled * 0.1}px)`;
-        }
-    }
-});
-
-// ===================================
-// Console Easter Egg
-// ===================================
-console.log(
-    '%c👋 Hey there, fellow developer!',
-    'font-size: 20px; font-weight: bold; color: #3B82F6;'
-);
-console.log(
-    '%cThanks for checking out my portfolio. Feel free to connect!',
-    'font-size: 14px; color: #8B5CF6;'
-);
-console.log(
-    '%c📧 siddharthaswal54@gmail.com',
-    'font-size: 12px; color: #22C55E;'
-);
-
-// ===================================
-// Chatbot Widget Logic
-// ===================================
-const chatToggle = document.getElementById('chat-toggle');
-const chatWindow = document.getElementById('chat-window');
-const chatClose = document.getElementById('chat-close');
-const chatForm = document.getElementById('chat-form');
-const chatInput = document.getElementById('chat-input');
+// ═══════════════════════════════════════
+// 4. Chatbot widget
+// ═══════════════════════════════════════
+const chatToggle  = document.getElementById('chat-toggle');
+const chatWindow  = document.getElementById('chat-window');
+const chatClose   = document.getElementById('chat-close');
+const chatForm    = document.getElementById('chat-form');
+const chatInput   = document.getElementById('chat-input');
 const chatMessages = document.getElementById('chat-messages');
-const suggestedQuestions = document.getElementById('suggested-questions');
-const heroBubble = document.getElementById('hero-chat-bubble');
+const bubble      = document.getElementById('hero-chat-bubble');
+const suggestedQ  = document.getElementById('suggested-questions');
+const openChatBtn = document.getElementById('open-chat-btn');
 
-// Hero Bubble Logic
-if (heroBubble) {
-    // Show bubble after 2 seconds
-    setTimeout(() => {
-        heroBubble.style.display = 'block';
-    }, 2000);
-
-    // Open chat when bubble is clicked
-    heroBubble.addEventListener('click', () => {
-        toggleChat();
-        heroBubble.style.display = 'none'; // Hide bubble once clicked
-    });
-}
-
-// Conversation history for context
+let chatOpen = false;
 let conversationHistory = [];
 
-// Toggle Chat Window
-function toggleChat() {
-    chatWindow.classList.toggle('active');
-    chatToggle.classList.toggle('active');
-    if (chatWindow.classList.contains('active')) {
-        chatInput.focus();
-    }
+function openChat() {
+    chatOpen = true;
+    chatToggle.classList.add('open');
+    chatWindow.classList.add('open');
+    bubble.classList.add('hidden');
 }
 
-chatToggle.addEventListener('click', toggleChat);
-chatClose.addEventListener('click', toggleChat);
+function closeChat() {
+    chatOpen = false;
+    chatToggle.classList.remove('open');
+    chatWindow.classList.remove('open');
+}
 
-// Handle Suggested Question Clicks
+chatToggle.addEventListener('click', () => chatOpen ? closeChat() : openChat());
+chatClose.addEventListener('click', closeChat);
+bubble.addEventListener('click', openChat);
+if (openChatBtn) openChatBtn.addEventListener('click', openChat);
+
+// Auto-dismiss bubble after 6s
+setTimeout(() => bubble.classList.add('hidden'), 6000);
+
+// Suggestion chips
 document.querySelectorAll('.suggestion-chip').forEach(chip => {
     chip.addEventListener('click', () => {
-        const question = chip.getAttribute('data-question');
-        if (question) {
-            sendMessage(question);
-        }
+        const q = chip.dataset.question;
+        sendMessage(q);
+        if (suggestedQ) suggestedQ.style.display = 'none';
     });
 });
 
-// Hide suggested questions after first message
-function hideSuggestions() {
-    if (suggestedQuestions) {
-        suggestedQuestions.classList.add('hidden');
-    }
-}
-
-// Send message function
-function sendMessage(message) {
-    if (!message.trim()) return;
-
-    // Hide suggestions after first message
-    hideSuggestions();
-
-    // Add User Message
-    addMessage(message, 'user');
-    chatInput.value = '';
-
-    // Add to conversation history
-    conversationHistory.push({ role: 'user', content: message });
-
-    // Show Typing Indicator
-    showTypingIndicator();
-
-    // Call the API
-    fetchBotResponse(message);
-}
-
-// Handle form submission
+// Form submit
 chatForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const message = chatInput.value.trim();
-    if (message) {
-        sendMessage(message);
-    }
+    const txt = chatInput.value.trim();
+    if (!txt) return;
+    sendMessage(txt);
+    chatInput.value = '';
 });
 
-// Fetch Bot Response
-async function fetchBotResponse(userMessage) {
+function addMessage(text, type) {
+    const div = document.createElement('div');
+    div.classList.add('message', type === 'user' ? 'user-message' : 'bot-message');
+    div.textContent = text;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+}
+
+function addLoadingMessage() {
+    const div = document.createElement('div');
+    div.classList.add('message', 'bot-message', 'loading');
+    div.innerHTML = `<div class="dot-flashing"><span></span><span></span><span></span></div>`;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+}
+
+async function sendMessage(text) {
+    // Hide suggestions on first user message
+    if (suggestedQ) suggestedQ.style.display = 'none';
+
+    addMessage(text, 'user');
+    // Store history in the format the API expects: { role, content }
+    conversationHistory.push({ role: 'user', content: text });
+
+    const loadingDiv = addLoadingMessage();
+
     try {
         const response = await fetch('/api/chat', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                message: userMessage,
-                history: conversationHistory.slice(-10) // Send last 10 messages for context
+                message: text,
+                history: conversationHistory.slice(-10)
             })
         });
 
-        removeTypingIndicator();
-
-        if (response.ok) {
-            const data = await response.json();
-            const reply = data.reply;
-
-            // Add to conversation history
-            conversationHistory.push({ role: 'assistant', content: reply });
-
-            // Format and display the response
-            addMessage(formatBotMessage(reply), 'bot');
-        } else {
-            const errorData = await response.json().catch(() => ({}));
-            const errorMsg = errorData.error || "Sorry, I'm having trouble connecting right now. Please try again.";
-            addMessage(errorMsg, 'bot', true);
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.error || `HTTP ${response.status}`);
         }
-    } catch (error) {
-        removeTypingIndicator();
-        console.error('Error:', error);
-        addMessage("Sorry, something went wrong. Please check your internet connection.", 'bot', true);
+
+        const data = await response.json();
+        const reply = data.reply || data.message || 'Sorry, I could not generate a response.';
+
+        loadingDiv.remove();
+        addMessage(reply, 'bot');
+        conversationHistory.push({ role: 'model', content: reply });
+    } catch (err) {
+        loadingDiv.remove();
+        addMessage(`Sorry, something went wrong: ${err.message}`, 'bot');
     }
 }
 
-// Format bot message (basic markdown-like formatting)
-function formatBotMessage(text) {
-    // Convert **bold** to strong
-    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-    // Convert bullet points
-    text = text.replace(/^[•\-\*]\s+(.+)$/gm, '<li>$1</li>');
-    text = text.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
-
-    return text;
-}
-
-function addMessage(text, sender, isError = false) {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', `${sender}-message`);
-    if (isError) {
-        messageDiv.classList.add('error-message');
-    }
-
-    // Use innerHTML for bot messages (formatted), textContent for user messages (plain)
-    if (sender === 'bot') {
-        messageDiv.innerHTML = text;
-    } else {
-        messageDiv.textContent = text;
-    }
-
-    chatMessages.appendChild(messageDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function showTypingIndicator() {
-    const typingDiv = document.createElement('div');
-    typingDiv.classList.add('typing-indicator');
-    typingDiv.id = 'typing-indicator';
-    typingDiv.innerHTML = `
-        <span class="typing-dot"></span>
-        <span class="typing-dot"></span>
-        <span class="typing-dot"></span>
-    `;
-
-    chatMessages.appendChild(typingDiv);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-function removeTypingIndicator() {
-    const typingDiv = document.getElementById('typing-indicator');
-    if (typingDiv) {
-        typingDiv.remove();
-    }
-}
-
+// ═══════════════════════════════════════
+// 5. Smooth scroll for sidebar nav links
+// ═══════════════════════════════════════
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+            e.preventDefault();
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    });
+});
