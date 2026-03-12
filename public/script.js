@@ -263,6 +263,25 @@ const chatClose = document.getElementById('chat-close');
 const chatForm = document.getElementById('chat-form');
 const chatInput = document.getElementById('chat-input');
 const chatMessages = document.getElementById('chat-messages');
+const suggestedQuestions = document.getElementById('suggested-questions');
+const heroBubble = document.getElementById('hero-chat-bubble');
+
+// Hero Bubble Logic
+if (heroBubble) {
+    // Show bubble after 2 seconds
+    setTimeout(() => {
+        heroBubble.style.display = 'block';
+    }, 2000);
+
+    // Open chat when bubble is clicked
+    heroBubble.addEventListener('click', () => {
+        toggleChat();
+        heroBubble.style.display = 'none'; // Hide bubble once clicked
+    });
+}
+
+// Conversation history for context
+let conversationHistory = [];
 
 // Toggle Chat Window
 function toggleChat() {
@@ -276,8 +295,54 @@ function toggleChat() {
 chatToggle.addEventListener('click', toggleChat);
 chatClose.addEventListener('click', toggleChat);
 
-// Handle Message Submission
-// Real Bot Logic
+// Handle Suggested Question Clicks
+document.querySelectorAll('.suggestion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+        const question = chip.getAttribute('data-question');
+        if (question) {
+            sendMessage(question);
+        }
+    });
+});
+
+// Hide suggested questions after first message
+function hideSuggestions() {
+    if (suggestedQuestions) {
+        suggestedQuestions.classList.add('hidden');
+    }
+}
+
+// Send message function
+function sendMessage(message) {
+    if (!message.trim()) return;
+
+    // Hide suggestions after first message
+    hideSuggestions();
+
+    // Add User Message
+    addMessage(message, 'user');
+    chatInput.value = '';
+
+    // Add to conversation history
+    conversationHistory.push({ role: 'user', content: message });
+
+    // Show Typing Indicator
+    showTypingIndicator();
+
+    // Call the API
+    fetchBotResponse(message);
+}
+
+// Handle form submission
+chatForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const message = chatInput.value.trim();
+    if (message) {
+        sendMessage(message);
+    }
+});
+
+// Fetch Bot Response
 async function fetchBotResponse(userMessage) {
     try {
         const response = await fetch('/api/chat', {
@@ -285,47 +350,60 @@ async function fetchBotResponse(userMessage) {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ message: userMessage })
+            body: JSON.stringify({
+                message: userMessage,
+                history: conversationHistory.slice(-10) // Send last 10 messages for context
+            })
         });
 
         removeTypingIndicator();
 
         if (response.ok) {
             const data = await response.json();
-            addMessage(data.reply, 'bot');
+            const reply = data.reply;
+
+            // Add to conversation history
+            conversationHistory.push({ role: 'assistant', content: reply });
+
+            // Format and display the response
+            addMessage(formatBotMessage(reply), 'bot');
         } else {
-            console.error('Failed to get response');
-            addMessage("Sorry, I'm having trouble connecting to my brain right now. Please try again later.", 'bot');
+            const errorData = await response.json().catch(() => ({}));
+            const errorMsg = errorData.error || "Sorry, I'm having trouble connecting right now. Please try again.";
+            addMessage(errorMsg, 'bot', true);
         }
     } catch (error) {
         removeTypingIndicator();
         console.error('Error:', error);
-        addMessage("Sorry, something went wrong. Please check your internet connection.", 'bot');
+        addMessage("Sorry, something went wrong. Please check your internet connection.", 'bot', true);
     }
 }
 
-// Update the event listener to call fetchBotResponse
-chatForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const message = chatInput.value.trim();
+// Format bot message (basic markdown-like formatting)
+function formatBotMessage(text) {
+    // Convert **bold** to strong
+    text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
-    if (message) {
-        // Add User Message
-        addMessage(message, 'user');
-        chatInput.value = '';
+    // Convert bullet points
+    text = text.replace(/^[•\-\*]\s+(.+)$/gm, '<li>$1</li>');
+    text = text.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
 
-        // Show Typing Indicator
-        showTypingIndicator();
+    return text;
+}
 
-        // Call the API
-        fetchBotResponse(message);
-    }
-});
-
-function addMessage(text, sender) {
+function addMessage(text, sender, isError = false) {
     const messageDiv = document.createElement('div');
     messageDiv.classList.add('message', `${sender}-message`);
-    messageDiv.textContent = text;
+    if (isError) {
+        messageDiv.classList.add('error-message');
+    }
+
+    // Use innerHTML for bot messages (formatted), textContent for user messages (plain)
+    if (sender === 'bot') {
+        messageDiv.innerHTML = text;
+    } else {
+        messageDiv.textContent = text;
+    }
 
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
@@ -351,3 +429,4 @@ function removeTypingIndicator() {
         typingDiv.remove();
     }
 }
+

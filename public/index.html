@@ -68,7 +68,7 @@
                 <p class="hero-greeting">Hello, I'm</p>
                 <h1 class="hero-title">Siddharth Aswal</h1>
                 <h2 class="hero-subtitle">
-                    <span class="typing-text">Senior Backend Developer</span>
+                    <span class="typing-text">Fullstack Engineer (Backend-Heavy)</span>
                 </h2>
                 <p class="hero-description">
                     Building robust, scalable backend systems with 4+ years of expertise in
@@ -185,6 +185,14 @@
                             <div class="skill-icon socketio"></div>
                             <span class="skill-name">Socket.io</span>
                         </div>
+                        <div class="skill-card">
+                            <div class="skill-icon redis"></div>
+                            <span class="skill-name">Redis</span>
+                        </div>
+                        <div class="skill-card">
+                            <div class="skill-icon docker"></div>
+                            <span class="skill-name">Docker</span>
+                        </div>
                     </div>
                 </div>
                 <div class="skills-category">
@@ -281,8 +289,40 @@
                     <div class="timeline-marker"></div>
                     <div class="timeline-content">
                         <div class="timeline-header">
+                            <h3 class="job-title">Software Engineer</h3>
+                            <span class="job-period">Apr 2024 - Present</span>
+                        </div>
+                        <p class="job-company">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            TATA AIG, Gurugram, India
+                        </p>
+                        <ul class="job-description">
+                            <li>Implemented DocIT service for MediCare Select product, serving 1M+ policyholders with
+                                automated document creation.</li>
+                            <li>Built high-throughput GC sync reporting in Footprint platform, handling 70k+
+                                records/sec.</li>
+                            <li>Scaled Policy Issuing workflows to process 10M+ monthly transactions with 99.9%
+                                availability.</li>
+                        </ul>
+                        <div class="job-tags">
+                            <span class="tag">Node.js</span>
+                            <span class="tag">NestJS</span>
+                            <span class="tag">React</span>
+                            <span class="tag">AWS</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
                             <h3 class="job-title">Associate Consultant</h3>
-                            <span class="job-period">Mar 2023 - Present</span>
+                            <span class="job-period">Mar 2023 - Apr 2024</span>
                         </div>
                         <p class="job-company">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
@@ -557,7 +597,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="resume.pdf" class="btn btn-primary download-resume" download>
+                    <a href="Siddharth-Aswal-resume.pdf" class="btn btn-primary download-resume" download>
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                             stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -587,6 +627,11 @@
 
     <!-- Chatbot Widget -->
     <div class="chat-widget">
+        <!-- Hero CTA Bubble -->
+        <div class="hero-chat-bubble" id="hero-chat-bubble">
+            👋 Hi! I'm Siddharth's AI. Ask me anything!
+        </div>
+
         <button class="chat-toggle" id="chat-toggle" aria-label="Toggle chat">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="chat-icon">
@@ -604,7 +649,10 @@
             <div class="chat-header">
                 <div class="chat-title">
                     <span class="status-dot"></span>
-                    <h3>Ask AI Assistant</h3>
+                    <div>
+                        <h3>Ask AI Assistant</h3>
+                        <p class="chat-subtitle">Ask about skills, projects, or experience</p>
+                    </div>
                 </div>
                 <button class="chat-close" id="chat-close">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -617,6 +665,19 @@
             <div class="chat-messages" id="chat-messages">
                 <div class="message bot-message">
                     Hi! I'm Siddharth's AI assistant. Ask me anything about his skills, projects, or experience!
+                </div>
+                <div class="suggested-questions" id="suggested-questions">
+                    <p class="suggestions-label">Quick questions:</p>
+                    <div class="suggestions-list">
+                        <button class="suggestion-chip" data-question="What are Siddharth's key skills?">Key
+                            skills</button>
+                        <button class="suggestion-chip" data-question="Tell me about his work experience">Work
+                            experience</button>
+                        <button class="suggestion-chip"
+                            data-question="What projects has he worked on?">Projects</button>
+                        <button class="suggestion-chip" data-question="What's his AWS experience?">AWS
+                            experience</button>
+                    </div>
                 </div>
             </div>
             <form class="chat-input-area" id="chat-form">
