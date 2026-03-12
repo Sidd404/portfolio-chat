@@ -1,5 +1,5 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const { generateSystemPrompt, knowledgeBase, getCachedAnswer } = require("./knowledge-base");
+const { generateSystemPrompt, knowledgeBase } = require("./knowledge-base");
 
 module.exports = async (req, res) => {
     // Add CORS headers to allow requests from any origin
@@ -41,18 +41,9 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: 'Message is required' });
     }
 
-    // ── Cache check: return instantly for common questions ──────────────────
-    const cached = getCachedAnswer(message);
-    if (cached) {
-        return res.status(200).json({
-            reply: cached,
-            suggestedQuestions: knowledgeBase.suggestedQuestions.slice(0, 3)
-        });
-    }
-
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-3.1-flash-lite-preview" });
 
         // Build conversation history from client
         const conversationHistory = [
@@ -79,7 +70,6 @@ module.exports = async (req, res) => {
         const chat = model.startChat({
             history: conversationHistory,
             generationConfig: {
-                maxOutputTokens: 150,
                 temperature: 0.4,
             },
         });

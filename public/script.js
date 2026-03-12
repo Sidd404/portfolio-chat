@@ -125,7 +125,12 @@ async function sendMessage(text) {
     if (suggestedQ) suggestedQ.style.display = 'none';
 
     addMessage(text, 'user');
+    
+    const payloadHistory = conversationHistory.slice(-10);
+    
     // Store history in the format the API expects: { role, content }
+    // We add the user message to history AFTER creating the payload history
+    // so it doesn't get sent twice (once in history, once as message).
     conversationHistory.push({ role: 'user', content: text });
 
     const loadingDiv = addLoadingMessage();
@@ -136,7 +141,7 @@ async function sendMessage(text) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 message: text,
-                history: conversationHistory.slice(-10)
+                history: payloadHistory
             })
         });
 

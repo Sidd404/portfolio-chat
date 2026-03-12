@@ -61,6 +61,12 @@ img { max-width: 100%; }
     transition: background 0.1s;
 }
 
+@media (max-width: 768px) {
+    .gradient-overlay {
+        display: none;
+    }
+}
+
 /* ─── Layout ─── */
 .layout {
     display: flex;
@@ -1018,17 +1024,38 @@ img { max-width: 100%; }
         position: relative;
         width: 100%;
         height: auto;
-        padding: 60px 0 32px;
+        padding: 40px 0 20px;
     }
-    .sidebar-inner { height: auto; gap: 32px; }
-    .sidebar-top { gap: 28px; }
-    .sidebar-nav { display: none; }
+    .sidebar-inner { height: auto; gap: 24px; }
+    .sidebar-top { gap: 20px; }
+    
+    .sidebar-nav {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 8px;
+    }
+    .sidebar-nav ul {
+        flex-direction: row;
+        gap: 24px;
+        flex-wrap: nowrap;
+        width: max-content;
+    }
+    .nav-indicator { display: none; }
+    .nav-link { 
+        padding: 8px 0; 
+        font-size: 0.8rem;
+    }
+
     .bio-short { max-width: 100%; }
-    .content { padding: 40px 0 60px; max-width: 100%; }
+    .content { padding: 20px 0 60px; max-width: 100%; }
     :root { --section-gap: 80px; }
 
     .featured-content {
         grid-template-columns: 1fr;
+        padding: 24px;
+        gap: 24px;
     }
     .featured-project--alt .featured-content {
         grid-template-columns: 1fr;
@@ -1037,9 +1064,15 @@ img { max-width: 100%; }
 
     .projects-grid { grid-template-columns: 1fr; }
     .exp-item { grid-template-columns: 1fr; }
-    .exp-meta { flex-direction: row; justify-content: space-between; }
+    .exp-meta { flex-direction: row; justify-content: space-between; gap: 12px; align-items: center;}
 
-    .chat-window { width: calc(100vw - 32px); right: 16px; }
+    .chat-window { 
+        width: calc(100vw - 32px); 
+        right: 16px; 
+        height: 70vh;
+        max-height: 480px;
+        bottom: 80px; /* Leave room for toggle button below */
+    }
     .chat-widget { right: 16px; bottom: 20px; }
 }
 
